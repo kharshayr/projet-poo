@@ -101,3 +101,22 @@ DISPLAY::DISPLAY(string file,string label) {
 				SOURCE=x;}
 			else{
 				cout << "Etiquette " << x << " non reconnue pour DISPLAY"<< endl;}}}}
+
+
+PROGRAMME::PROGRAMME(string file) {
+	ifstream inFile(file,ios::out);
+	string x;
+	INSTRUCTION I;
+	if (!inFile) {
+		cerr << "Unable to open file for LIST_INST" << endl;}
+	else {
+		while (inFile >> x){
+			if ("NOP"==x) {
+				I.OPERATION=stod(x);}
+			else{
+				I.OPERATION=x;
+				inFile >> x;
+				I.OPERANDE1=stod(x);
+				inFile >> x;
+				I.OPERANDE2=stod(x);}
+			LIST_INST.push_back(I);}}}
