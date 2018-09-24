@@ -135,15 +135,37 @@ DISPLAY::DISPLAY(string file,string label) {
 			else{
 				cout << "Etiquette " << x << " non reconnue pour DISPLAY"<< endl;}}}}
 
-/*
 class INSTRUCTION {
 	public:
 		string OPERATION;
-		string OPERANDE1;
-		string OPERANDE2;
-	INSTRUCTION(string s
-}
-*/
+		double OPERANDE1;
+		double OPERANDE2;
+	~INSTRUCTION(){};
+};
+
+class PROGRAMME {
+	public:
+		std::list<INSTRUCTION> LIST_INST;
+	PROGRAMME(string);
+	~PROGRAMME(){};};
+
+PROGRAMME::PROGRAMME(string file) {
+	ifstream inFile(file,ios::out);
+	string x;
+	INSTRUCTION I;
+	if (!inFile) {
+		cerr << "Unable to open file for LIST_INST" << endl;}
+	else {
+		while (inFile >> x){
+			if ("NOP"==x) {
+				I.OPERATION=stod(x);}
+			else{
+				I.OPERATION=x;
+				inFile >> x;
+				I.OPERANDE1=stod(x);
+				inFile >> x;
+				I.OPERANDE2=stod(x);}
+			LIST_INST.push_back(I);}}}
 
 class DATA_VALUE {
 	public:
@@ -160,4 +182,7 @@ int main() {
 	BUS bus1("BUS1.txt");
 	MEMORY mem1("MEMORY1.txt");
 	DISPLAY disp1("DISPLAY1.txt","c++ c tro bi1");
-	cout << cpu1.LABEL << endl << bus1.LABEL << endl << mem1.LABEL << endl << disp1.LABEL <<endl;}
+	PROGRAMME prg("PROG.txt");
+	
+	/*for (it=prg.LIST_INST; it!=prg.LIST_INST.end(); it++){
+		cout << it.OPERATION << it.OPERANDE1 << it.OPERANDE2 << endl;}*/}
