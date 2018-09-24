@@ -6,23 +6,21 @@ using namespace std;
 
 class component {
 	public:
-		virtual void load(string file);
-		virtual void simulate();
-		virtual void read();
-	};
+		string TYPE;
+		string LABEL;
+		/*virtual void simulate();
+		virtual void read();*/};
 
 class CPU : public component {
 	public:
-		string TYPE;
-		string LABEL;
 		int CORES;
 		int FREQUENCY;
 		string PROGRAM;
-		void load(string file);};
+	CPU(string);
+	~CPU(){};};
 
-void CPU:: load(string file) {
-	ifstream inFile;
-	inFile.open(file,ios::out);
+CPU:: CPU(string file) {
+	ifstream inFile(file,ios::out);
 	string x;
 	if (!inFile) {
 		cerr << "Unable to open file for CPU" << endl;
@@ -50,15 +48,13 @@ void CPU:: load(string file) {
 
 class BUS : public component {
 	public:
-		string TYPE;
-		string LABEL;
 		int WIDTH;
 		string SOURCE;
-		BUS(string);};
+	BUS(string);
+	~BUS(){};};
 
 BUS::BUS(string file) {
-	ifstream inFile;
-	inFile.open(file,ios::out);
+	ifstream inFile(file,ios::out);
 	string x;
 	if (!inFile) {
 		cerr << "Unable to open file for BUS" << endl;}
@@ -81,17 +77,73 @@ BUS::BUS(string file) {
 
 class MEMORY : public component {
 	public:
-		string TYPE;
-		string LABEL;
 		int SIZE;
 		int ACCESS;
-		string SOURCE;};
+		string SOURCE;
+	MEMORY(string file);
+	~MEMORY(){};};
+
+MEMORY::MEMORY(string file) {
+	ifstream inFile(file,ios::out);
+	string x;
+	if (!inFile) {
+		cerr << "Unable to open file for MEMORY" << endl;}
+	else {
+		while (inFile >> x){
+			if ("TYPE:"==x) {
+				inFile >> x;
+				TYPE=x;}
+			else if ("LABEL:"==x) {
+				inFile >> x;
+				LABEL=x;}
+			else if ("SIZE:"==x) {
+				inFile >> x;
+				SIZE=stoi(x);}
+			else if ("ACCESS:"==x) {
+				inFile >> x;
+				ACCESS=stoi(x);}
+			else if ("SOURCE:"==x) {
+				inFile >> x;
+				SOURCE=x;}
+			else{
+				cout << "Etiquette " << x << " non reconnue pour MEMORY"<< endl;}}}}
 
 class DISPLAY : public component {
 	public:
-		string TYPE;
 		int RR;
-		string SOURCE;};
+		string SOURCE;
+	DISPLAY(string,string);
+	~DISPLAY(){};};
+
+DISPLAY::DISPLAY(string file,string label) {
+	ifstream inFile(file,ios::out);
+	string x;
+	if (!inFile) {
+		cerr << "Unable to open file for DISPLAY" << endl;}
+	else {
+		LABEL=label;
+		while (inFile >> x){
+			if ("TYPE:"==x) {
+				inFile >> x;
+				TYPE=x;}
+			else if ("REFRESH:"==x) {
+				inFile >> x;
+				RR=stoi(x);}
+			else if ("SOURCE:"==x) {
+				inFile >> x;
+				SOURCE=x;}
+			else{
+				cout << "Etiquette " << x << " non reconnue pour DISPLAY"<< endl;}}}}
+
+/*
+class INSTRUCTION {
+	public:
+		string OPERATION;
+		string OPERANDE1;
+		string OPERANDE2;
+	INSTRUCTION(string s
+}
+*/
 
 class DATA_VALUE {
 	public:
@@ -104,6 +156,8 @@ class CPU_Register {
 		bool EMPTY;};
 
 int main() {
-	CPU cpu1;
-	cpu1.load("CPU1.txt");
-}
+	CPU cpu1("CPU1.txt");
+	BUS bus1("BUS1.txt");
+	MEMORY mem1("MEMORY1.txt");
+	DISPLAY disp1("DISPLAY1.txt","c++ c tro bi1");
+	cout << cpu1.LABEL << endl << bus1.LABEL << endl << mem1.LABEL << endl << disp1.LABEL <<endl;}
