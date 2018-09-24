@@ -41,27 +41,6 @@ public:
           DISPLAY(string,string);
           ~DISPLAY(){};};
 
-          /*
-          class INSTRUCTION {
-        public:
-        string OPERATION;
-        string OPERANDE1;
-        string OPERANDE2;
-        INSTRUCTION(string s
-      }
-      */
-
-      class DATA_VALUE {
-      public:
-        double VALUE;
-        bool VALID;};
-
-        class CPU_Register {
-        public:
-          std::list<int> VALUE;
-          bool EMPTY;};
-
-
           class INSTRUCTION {
           public:
             string OPERATION;
