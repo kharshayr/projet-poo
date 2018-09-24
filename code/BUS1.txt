@@ -1,0 +1,4 @@
+TYPE: BUS
+LABEL: My_bus_1
+WIDTH: 2
+SOURCE: Main processing unit

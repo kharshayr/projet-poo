@@ -1,0 +1,5 @@
+TYPE: CPU
+LABEL: Main_processing_unit
+CORES: 2
+FREQUENCY: 4
+PROGRAM: /path/to/program/file.txt
