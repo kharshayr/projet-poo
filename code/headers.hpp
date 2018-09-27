@@ -26,7 +26,7 @@ public:
 
 class PROGRAMME {
 private:
-  std::list<INSTRUCTION> LIST_INST;
+  std::vector<INSTRUCTION> VECT_INST;
 public:
   void printProg();
   PROGRAMME(string);
@@ -67,13 +67,30 @@ public:
   ~BUS(){};
 };
 
+class MEM_POINT {
+private:
+  friend class MEMORY;
+  int AGE_RANK;
+  double VALUE;
+public:
+  MEM_POINT();
+  ~MEM_POINT(){};
+};
+
 class MEMORY : public component {
+private:
   int SIZE;
   int ACCESS;
+  int COUNTER;
+  int ADD_WR;
+  std::vector<MEM_POINT> MEM_CONTENT;
   string SOURCE;
+  int search_max_rank();
+  int search_add();
 public:
   MEMORY(string file);
   ~MEMORY(){};
+  void simulate();
 };
 
 class DISPLAY : public component {

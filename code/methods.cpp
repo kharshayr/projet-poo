@@ -75,11 +75,19 @@ BUS::BUS(string file) {
 	}
 }
 
-
+MEM_POINT::MEM_POINT(){
+	AGE_RANK=0;
+	VALUE=0;
+}
 
 MEMORY::MEMORY(string file) {
+	COUNTER=0;
 	ifstream inFile(file,ios::out);
 	string x;
+	MEM_POINT temp;
+	for (int i=0;i<SIZE;i++){
+		MEM_CONTENT.push_back(temp);
+	}
 	if (!inFile) {
 		cerr << "Unable to open file for MEMORY" << endl;
 	}
@@ -163,19 +171,19 @@ PROGRAMME::PROGRAMME(string file){
 	ifstream inFile(file,ios::out);
 	string x;
 	if (!inFile) {
-		cerr << "Unable to open file for LIST_INST" << endl;
+		cerr << "Unable to open file for VECT_INST" << endl;
 	}
 	else {
 		while (getline(inFile,x)){
 			INSTRUCTION inst(x);
-			LIST_INST.push_back(inst);
+			VECT_INST.push_back(inst);
 
 		}
 	}
 }
 
 void INSTRUCTION::printInst() {
-	if (OPERATION=="NOP") {
+	if (OPERATION=="NOP" || OPERATION=="") {
 		cout << OPERATION << endl;
 	}
 	else
@@ -185,7 +193,7 @@ void INSTRUCTION::printInst() {
 }
 
 void PROGRAMME::printProg() {
-	for( list<INSTRUCTION>::iterator i = LIST_INST.begin(); i!= LIST_INST.end(); i++) {
+	for( vector<INSTRUCTION>::iterator i = VECT_INST.begin(); i!= VECT_INST.end(); i++) {
 		(*i).printInst();
 	}
 }
@@ -204,4 +212,42 @@ double CPU_Register::readValue() {
 	FIFO.pop();
 	EMPTY = FIFO.empty();
 	return x;
+}
+
+int MEMORY::search_max_rank(){
+	int max_rank=0;
+	for (int i=0;i<SIZE;i++){
+		if ((MEM_CONTENT[i]).AGE_RANK>max_rank){
+			max_rank=MEM_CONTENT[i].AGE_RANK+1;
+		}
+	}
+	return max_rank;
+}
+
+int MEMORY::search_add(){
+	int min=0;
+	for (int i=0;i<SIZE;i++){
+		if (MEM_CONTENT[i].AGE_RANK==0){
+			return i;
+		}
+		if (MEM_CONTENT[i].AGE_RANK<min){
+			min=i;
+		}
+	}
+return min;
+}
+
+void MEMORY::simulate(){
+	if (COUNTER!=ACCESS){
+		COUNTER+=1;
+	}
+	else{
+		COUNTER=0;
+		MEM_POINT temp;
+		int add;
+		/*temp.VALUE= ???; Comment lier les composants ? */
+		temp.AGE_RANK=search_max_rank();
+		add=search_add();
+		MEM_CONTENT[add]=temp;
+	}
 }
