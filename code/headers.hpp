@@ -19,14 +19,16 @@ private:
   double OPERANDE2;
 public:
   INSTRUCTION(string);
-  ~INSTRUCTION();
+  ~INSTRUCTION(){};
   void computeInst();
+  void printInst();
 };
 
 class PROGRAMME {
 private:
   std::list<INSTRUCTION> LIST_INST;
 public:
+  void printProg();
   PROGRAMME(string);
   ~PROGRAMME(){};
 };
