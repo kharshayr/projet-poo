@@ -18,7 +18,7 @@ private:
   double OPERANDE1;
   double OPERANDE2;
 public:
-
+  INSTRUCTION(string);
   ~INSTRUCTION();
   void computeInst();
 };
