@@ -1,4 +1,5 @@
 #include <list>
+#include <queue>
 #include <iostream>
 #include <fstream>
 #include "headers.hpp"
@@ -103,7 +104,7 @@ DISPLAY::DISPLAY(string file,string label) {
 				cout << "Etiquette " << x << " non reconnue pour DISPLAY"<< endl;}}}}
 
 
-PROGRAMME::PROGRAMME(string file) {
+/*PROGRAMME::PROGRAMME(string file) {
 	ifstream inFile(file,ios::out);
 	string x;
 	INSTRUCTION I;
@@ -119,4 +120,21 @@ PROGRAMME::PROGRAMME(string file) {
 				I.OPERANDE1=stod(x);
 				inFile >> x;
 				I.OPERANDE2=stod(x);}
-			LIST_INST.push_back(I);}}}
+			LIST_INST.push_back(I);}}}*/
+
+
+CPU_Register::CPU_Register(){
+	EMPTY = true;
+}
+
+void CPU_Register::appendValue(double value) {
+	FIFO.push(value);
+	EMPTY = FIFO.empty();
+}
+
+double CPU_Register::readValue() {
+	double x = FIFO.front();
+	FIFO.pop();
+	EMPTY = FIFO.empty();
+	return x;
+}

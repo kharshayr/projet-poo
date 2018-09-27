@@ -1,0 +1,7 @@
+/tmp/cc0MVDpN.o : Dans la fonction « main » :
+main.cpp:(.text+0x54) : référence indéfinie vers « CPU::CPU(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >) »
+main.cpp:(.text+0xb2) : référence indéfinie vers « BUS::BUS(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >) »
+main.cpp:(.text+0x113) : référence indéfinie vers « MEMORY::MEMORY(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >) »
+main.cpp:(.text+0x1a2) : référence indéfinie vers « DISPLAY::DISPLAY(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >) »
+main.cpp:(.text+0x221) : référence indéfinie vers « PROGRAMME::PROGRAMME(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >) »
+collect2: error: ld returned 1 exit status

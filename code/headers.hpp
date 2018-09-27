@@ -9,58 +9,82 @@ public:
   string TYPE;
   string LABEL;
   /*virtual void simulate();
-  virtual void read();*/};
+  virtual void read();*/
+};
 
-  class CPU : public component {
-  public:
-    int CORES;
-    int FREQUENCY;
-    string PROGRAM;
-    CPU(string);
-    ~CPU(){};};
+class INSTRUCTION {
+private:
+  string OPERATION;
+  double OPERANDE1;
+  double OPERANDE2;
+public:
 
-    class BUS : public component {
-    public:
-      int WIDTH;
-      string SOURCE;
-      BUS(string);
-      ~BUS(){};};
+  ~INSTRUCTION();
+  void computeInst();
+};
 
-      class MEMORY : public component {
-      public:
-        int SIZE;
-        int ACCESS;
-        string SOURCE;
-        MEMORY(string file);
-        ~MEMORY(){};};
+class PROGRAMME {
+private:
+  std::list<INSTRUCTION> LIST_INST;
+public:
+  PROGRAMME(string);
+  ~PROGRAMME(){};
+};
 
-        class DISPLAY : public component {
-        public:
-          int RR;
-          string SOURCE;
-          DISPLAY(string,string);
-          ~DISPLAY(){};};
+class CPU_Register {
+private:
+  std::queue<double> FIFO;
+  bool EMPTY;
+public:
+  CPU_Register();
+  ~CPU_Register(){};
+  void appendValue(double value);
+  double readValue();
+  bool isEmpty();
+};
 
-          class INSTRUCTION {
-          public:
-            string OPERATION;
-            double OPERANDE1;
-            double OPERANDE2;
-            ~INSTRUCTION(){};
-          };
+class CPU : public component {
+private:
+  int CORES;
+  int ACTIVE_CORES;
+  int FREQUENCY;
+  string PROGRAM;
+//  PROGRAMME PROG;
+//  CPU_Register REG;
+public:
+  CPU(string);
+  ~CPU(){};
+};
 
-          class PROGRAMME {
-          public:
-            std::list<INSTRUCTION> LIST_INST;
-            PROGRAMME(string);
-            ~PROGRAMME(){};};
+class BUS : public component {
+private:
+  int WIDTH;
+  string SOURCE;
+public:
+  BUS(string);
+  ~BUS(){};
+};
 
-            class DATA_VALUE {
-            	public:
-            		double VALUE;
-            		bool VALID;};
+class MEMORY : public component {
+  int SIZE;
+  int ACCESS;
+  string SOURCE;
+public:
+  MEMORY(string file);
+  ~MEMORY(){};
+};
 
-            class CPU_Register {
-            	public:
-            		std::list<int> VALUE;
-            		bool EMPTY;};
+class DISPLAY : public component {
+private:
+  int RR;
+  string SOURCE;
+public:
+  DISPLAY(string,string);
+  ~DISPLAY(){};
+};
+
+class DATA_VALUE {
+private:
+  double VALUE;
+  bool VALID;
+};
