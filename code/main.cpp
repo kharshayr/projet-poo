@@ -12,6 +12,10 @@ int main() {
 	MEMORY mem1("MEMORY1.txt");
 	DISPLAY disp1("DISPLAY1.txt","c++ c tro bi1");
 	PROGRAMME prg("PROG.txt");
-
-	/*for (it=prg.LIST_INST; it!=prg.LIST_INST.end(); it++){
-		cout << it.OPERATION << it.OPERANDE1 << it.OPERANDE2 << endl;}*/}
+	list<INSTRUCTION>::iterator i;
+	for( i = prg.LIST_INST.begin(); i!= prg.LIST_INST.end(); ++i)
+		if (i->OPERATION=="NOP")
+			cout << i->OPERATION << endl;
+		else
+			cout << i->OPERATION << " " << i->OPERANDE1 << " "<< i->OPERANDE2<< endl;
+}

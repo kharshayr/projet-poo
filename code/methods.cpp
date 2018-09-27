@@ -2,6 +2,7 @@
 #include <iostream>
 #include <fstream>
 #include "headers.hpp"
+#include <sstream>
 
 using namespace std;
 
@@ -103,20 +104,29 @@ DISPLAY::DISPLAY(string file,string label) {
 				cout << "Etiquette " << x << " non reconnue pour DISPLAY"<< endl;}}}}
 
 
-PROGRAMME::PROGRAMME(string file) {
+INSTRUCTION::INSTRUCTION(string line){
+	istringstream iss(line);
+	string x;
+	iss >> x;
+	if ("NOP"==x) {
+		OPERATION=x;}
+	else{
+		OPERATION=x;
+		if (iss >> x)
+			OPERANDE1=stod(x);
+		if (iss >> x)
+			OPERANDE2=stod(x);}
+}
+
+PROGRAMME::PROGRAMME(string file){
 	ifstream inFile(file,ios::out);
 	string x;
-	INSTRUCTION I;
 	if (!inFile) {
 		cerr << "Unable to open file for LIST_INST" << endl;}
 	else {
-		while (inFile >> x){
-			if ("NOP"==x) {
-				I.OPERATION=stod(x);}
-			else{
-				I.OPERATION=x;
-				inFile >> x;
-				I.OPERANDE1=stod(x);
-				inFile >> x;
-				I.OPERANDE2=stod(x);}
-			LIST_INST.push_back(I);}}}
+		while (getline(inFile,x)){
+			INSTRUCTION inst(x);
+			LIST_INST.push_back(inst);
+		}
+	}
+}
