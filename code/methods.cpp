@@ -223,7 +223,7 @@ int MEMORY::search_max_rank(){
 	return max_rank;
 }
 
-int MEMORY::search_add(){
+int MEMORY::search_write(){
 	int min=SIZE;
 	for (int i=0;i<SIZE;i++){
 		if (MEM_CONTENT[i].AGE_RANK==0){
@@ -261,7 +261,7 @@ void MEMORY::simulate(){
 	else {
 		COUNTER=1;
 		MEM_POINT temp;
-		int add=search_add();
+		int add=search_write();
 		temp.AGE_RANK=search_max_rank()+1;
 		/*temp.VALUE= ???; Comment lier les composants ? */
 		MEM_CONTENT[add]=temp;

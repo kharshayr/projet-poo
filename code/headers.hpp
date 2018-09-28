@@ -99,7 +99,7 @@ private:
   string SOURCE;
   int search_max_rank();
   void rank_downgrade();
-  int search_add();
+  int search_write();
   int search_read();
 public:
   MEMORY(string file);
