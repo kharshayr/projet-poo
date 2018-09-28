@@ -14,7 +14,7 @@ main.exe: main.o methods.o
 
 .PHONY: clean run
  clean:
-	rm main.exe
+	rm *.exe
 	rm *.o
 
 run: main.exe

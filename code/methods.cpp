@@ -229,7 +229,7 @@ int MEMORY::search_add(){
 		if (MEM_CONTENT[i].AGE_RANK==0){
 			return i;
 		}
-		if (MEM_CONTENT[i].AGE_RANK<min){
+		if (MEM_CONTENT[i].AGE_RANK<=MEM_CONTENT[min].AGE_RANK){
 			min=i;
 		}
 	}
@@ -264,7 +264,7 @@ void MEMORY::simulate(){
 }
 
 void MEM_POINT::print_mem_point(){
-	cout << "[" << VALUE << "," << AGE_RANK << "]" << endl;
+	cout << "[value: " << VALUE << ",rank: " << AGE_RANK << "]" << endl;
 }
 
 void MEMORY::print_mem_content(){
