@@ -67,13 +67,24 @@ public:
   ~BUS(){};
 };
 
+class DATA_VALUE {
+private:
+  friend class MEMORY;
+  double VALUE;
+  bool VALID;
+public:
+  void print_data();
+  DATA_VALUE();
+  ~DATA_VALUE(){};
+};
+
 class MEM_POINT {
 private:
   friend class MEMORY;
   int AGE_RANK;
   double VALUE;
-  void print_mem_point();
 public:
+  void print_mem_point();
   MEM_POINT();
   ~MEM_POINT(){};
 };
@@ -89,11 +100,13 @@ private:
   int search_max_rank();
   void rank_downgrade();
   int search_add();
+  int search_read();
 public:
   MEMORY(string file);
   ~MEMORY(){};
   void print_mem_content();
   void simulate();
+  DATA_VALUE read();
 };
 
 class DISPLAY : public component {
@@ -103,10 +116,4 @@ private:
 public:
   DISPLAY(string,string);
   ~DISPLAY(){};
-};
-
-class DATA_VALUE {
-private:
-  double VALUE;
-  bool VALID;
 };

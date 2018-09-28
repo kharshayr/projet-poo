@@ -236,13 +236,19 @@ int MEMORY::search_add(){
 return min;
 }
 
-void MEMORY::rank_downgrade(){
-	int max=search_max_rank();
-	if (max<=SIZE){
-		return;
+int MEMORY::search_read(){
+	int min=SIZE;
+	for (int i=0;i<SIZE;i++){
+		if (MEM_CONTENT[i].AGE_RANK<=MEM_CONTENT[min].AGE_RANK && MEM_CONTENT[i].AGE_RANK!=0){
+			min=i;
+		}
 	}
-	else{
-		for (int i=0;i<SIZE;i++){
+	return min;
+}
+
+void MEMORY::rank_downgrade(){
+	for (int i=0;i<SIZE;i++){
+		if (MEM_CONTENT[i].AGE_RANK!=0){
 			MEM_CONTENT[i].AGE_RANK-=1;
 		}
 	}
@@ -259,7 +265,35 @@ void MEMORY::simulate(){
 		temp.AGE_RANK=search_max_rank()+1;
 		/*temp.VALUE= ???; Comment lier les composants ? */
 		MEM_CONTENT[add]=temp;
+		if (MEM_CONTENT[add].AGE_RANK==SIZE+1){
+			rank_downgrade();
+		}
+	}
+}
+
+DATA_VALUE::DATA_VALUE(){
+	VALID=false;
+	VALUE=0;
+}
+
+DATA_VALUE MEMORY::read(){
+	DATA_VALUE value;
+	int oldest_index=search_read();
+	if (oldest_index!=SIZE){
+		value.VALID=true;
+		value.VALUE=MEM_CONTENT[oldest_index].VALUE;
+		MEM_POINT MEM_CONTENT[oldest_index];
 		rank_downgrade();
+	}
+	return value;
+}
+
+void DATA_VALUE::print_data(){
+	if (VALID){
+		cout << "VALUE: " << VALUE << endl;
+	}
+	else{
+		cout << "INVALID DATA" << endl;
 	}
 }
 
