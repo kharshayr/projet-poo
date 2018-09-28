@@ -72,6 +72,7 @@ private:
   friend class MEMORY;
   int AGE_RANK;
   double VALUE;
+  void print_mem_point();
 public:
   MEM_POINT();
   ~MEM_POINT(){};
@@ -86,10 +87,12 @@ private:
   std::vector<MEM_POINT> MEM_CONTENT;
   string SOURCE;
   int search_max_rank();
+  void rank_downgrade();
   int search_add();
 public:
   MEMORY(string file);
   ~MEMORY(){};
+  void print_mem_content();
   void simulate();
 };
 

@@ -81,13 +81,9 @@ MEM_POINT::MEM_POINT(){
 }
 
 MEMORY::MEMORY(string file) {
-	COUNTER=0;
+	COUNTER=1;
 	ifstream inFile(file,ios::out);
 	string x;
-	MEM_POINT temp;
-	for (int i=0;i<SIZE;i++){
-		MEM_CONTENT.push_back(temp);
-	}
 	if (!inFile) {
 		cerr << "Unable to open file for MEMORY" << endl;
 	}
@@ -117,6 +113,9 @@ MEMORY::MEMORY(string file) {
 				cout << "Etiquette " << x << " non reconnue pour MEMORY"<< endl;
 			}
 		}
+	}
+	for (int i=0;i<SIZE;i++){
+		MEM_CONTENT.emplace_back();
 	}
 }
 
@@ -217,15 +216,15 @@ double CPU_Register::readValue() {
 int MEMORY::search_max_rank(){
 	int max_rank=0;
 	for (int i=0;i<SIZE;i++){
-		if ((MEM_CONTENT[i]).AGE_RANK>max_rank){
-			max_rank=MEM_CONTENT[i].AGE_RANK+1;
+		if (MEM_CONTENT[i].AGE_RANK>=max_rank){
+			max_rank=MEM_CONTENT[i].AGE_RANK;
 		}
 	}
 	return max_rank;
 }
 
 int MEMORY::search_add(){
-	int min=0;
+	int min=SIZE;
 	for (int i=0;i<SIZE;i++){
 		if (MEM_CONTENT[i].AGE_RANK==0){
 			return i;
@@ -237,17 +236,39 @@ int MEMORY::search_add(){
 return min;
 }
 
+void MEMORY::rank_downgrade(){
+	int max=search_max_rank();
+	if (max<=SIZE){
+		return;
+	}
+	else{
+		for (int i=0;i<SIZE;i++){
+			MEM_CONTENT[i].AGE_RANK-=1;
+		}
+	}
+}
+
 void MEMORY::simulate(){
 	if (COUNTER!=ACCESS){
 		COUNTER+=1;
 	}
-	else{
-		COUNTER=0;
+	else {
+		COUNTER=1;
 		MEM_POINT temp;
-		int add;
+		int add=search_add();
+		temp.AGE_RANK=search_max_rank()+1;
 		/*temp.VALUE= ???; Comment lier les composants ? */
-		temp.AGE_RANK=search_max_rank();
-		add=search_add();
 		MEM_CONTENT[add]=temp;
+		rank_downgrade();
+	}
+}
+
+void MEM_POINT::print_mem_point(){
+	cout << "[" << VALUE << "," << AGE_RANK << "]" << endl;
+}
+
+void MEMORY::print_mem_content(){
+	for (int i=0;i<SIZE;i++){
+		MEM_CONTENT[i].print_mem_point();
 	}
 }

@@ -14,5 +14,7 @@ int main() {
 	MEMORY mem1("MEMORY1.txt");
 	DISPLAY disp1("DISPLAY1.txt","c++ c tro bi1");
 	PROGRAMME prg("PROG.txt");
-	prg.printProg();
+	for (int i=0;i<120;i++){
+		mem1.simulate();
+	}
 }
