@@ -4,12 +4,20 @@
 
 using namespace std;
 
+class DATA_VALUE {
+public:
+  double VALUE;
+  bool VALID;
+  DATA_VALUE(double value, bool valid);
+  ~DATA_VALUE(){};
+};
+
 class component {
 public:
   string TYPE;
   string LABEL;
-  /*virtual void simulate();
-  virtual void read();*/
+//  virtual void simulate();
+  virtual DATA_VALUE read(){return DATA_VALUE(0,true);};
 };
 
 class INSTRUCTION {
@@ -20,40 +28,46 @@ private:
 public:
   INSTRUCTION(string);
   ~INSTRUCTION(){};
-  void computeInst();
+  double computeInst();
   void printInst();
 };
 
 class PROGRAMME {
 private:
-  std::list<INSTRUCTION> LIST_INST;
+  std::vector<INSTRUCTION> LIST_INST;
+  int POINTER;
 public:
   void printProg();
-  PROGRAMME(string);
-  ~PROGRAMME(){};
+  INSTRUCTION compute();
+  void reset();
+  bool isDone();
+  void load(string file);
+//  PROGRAMME();
+//  ~PROGRAMME(){};
 };
 
 class CPU_Register {
 private:
   std::queue<double> FIFO;
-  bool EMPTY;
 public:
-  CPU_Register();
-  ~CPU_Register(){};
   void appendValue(double value);
   double readValue();
   bool isEmpty();
+//  CPU_Register();
+//  ~CPU_Register(){};
 };
 
 class CPU : public component {
 private:
   int CORES;
-  int ACTIVE_CORES;
+  int ACTIVE_CORE;
   int FREQUENCY;
   string PROGRAM;
-//  PROGRAMME PROG;
-//  CPU_Register REG;
+  PROGRAMME prg;
+  CPU_Register REG;
 public:
+  void simulate();
+  DATA_VALUE read();
   CPU(string);
   ~CPU(){};
 };
@@ -62,8 +76,16 @@ class BUS : public component {
 private:
   int WIDTH;
   string SOURCE;
+  component* pSOURCE;
+  queue<DATA_VALUE> pending;
+  queue<DATA_VALUE> ready;
+  int readNumber;
 public:
-  BUS(string);
+  string sourceLabel();
+  void readyValues();
+  void simulate();
+  DATA_VALUE read();
+  BUS(string,component*);
   ~BUS(){};
 };
 
@@ -72,6 +94,7 @@ class MEMORY : public component {
   int ACCESS;
   string SOURCE;
 public:
+  DATA_VALUE read(){return DATA_VALUE(0,true);};
   MEMORY(string file);
   ~MEMORY(){};
 };
@@ -81,12 +104,7 @@ private:
   int RR;
   string SOURCE;
 public:
+  DATA_VALUE read(){return DATA_VALUE(0,true);};
   DISPLAY(string,string);
   ~DISPLAY(){};
-};
-
-class DATA_VALUE {
-private:
-  double VALUE;
-  bool VALID;
 };
