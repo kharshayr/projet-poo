@@ -82,7 +82,7 @@ MEM_POINT::MEM_POINT(){
 	VALUE=0;
 }
 
-MEMORY::MEMORY(string file) {
+MEMORY::MEMORY(string file, component* source) {
 	COUNTER=1;
 	ifstream inFile(file,ios::out);
 	string x;
@@ -119,9 +119,10 @@ MEMORY::MEMORY(string file) {
 	for (int i=0;i<SIZE;i++){
 		MEM_CONTENT.emplace_back();
 	}
+	pSOURCE = source;
 }
 
-DISPLAY::DISPLAY(string file,string label) {
+DISPLAY::DISPLAY(string file, component* source) {
 	ifstream inFile(file,ios::out);
 	DISP="";
 	reading=false;
@@ -131,11 +132,14 @@ DISPLAY::DISPLAY(string file,string label) {
 		cerr << "Unable to open file for DISPLAY" << endl;
 	}
 	else {
-		LABEL=label;
 		while (inFile >> x){
 			if ("TYPE:"==x) {
 				inFile >> x;
 				TYPE=x;
+			}
+			else if ("LABEL:"==x) {
+				inFile >> x;
+				LABEL=x;
 			}
 			else if ("REFRESH:"==x) {
 				inFile >> x;
@@ -150,6 +154,7 @@ DISPLAY::DISPLAY(string file,string label) {
 			}
 		}
 	}
+	pSOURCE = source;
 }
 
 INSTRUCTION::INSTRUCTION(string line){
@@ -351,7 +356,7 @@ void MEMORY::simulate(){
 	COUNTER=1;
 	int add=search_write();
 	MEM_CONTENT[add].AGE_RANK=search_max_rank()+1;
-	MEM_CONTENT[add].VALUE=data_in;
+	MEM_CONTENT[add].VALUE= (*pSOURCE).read().VALUE;
 	if (MEM_CONTENT[add].AGE_RANK==SIZE+1){
 		rank_downgrade();
 	}
@@ -388,15 +393,16 @@ void MEMORY::print_mem_content(){
 	}
 }
 
-void MEMORY::print_label(){
-	cout << SOURCE << endl;
+string MEMORY::sourceLabel() {
+	return (*pSOURCE).LABEL;
 }
 
-void DISPLAY::print_label(){
-	cout << SOURCE << endl;
+string DISPLAY::sourceLabel() {
+	return (*pSOURCE).LABEL;
 }
 
 void DISPLAY::simulate(){
+	DATA_VALUE dv = (*pSOURCE).read();
 	if (COUNTER!=RR){
 		COUNTER+=1;
 		reading=false;
@@ -405,9 +411,9 @@ void DISPLAY::simulate(){
 	else if (reading==false && COUNTER==RR){
 		reading=true;
 	}
-	else if (reading==true && data_in.VALID){
-		DISP=DISP+" "+to_string(data_in.VALUE);}
-	else if (reading==true && !data_in.VALID){
+	else if (reading==true && dv.VALID){
+		DISP=DISP+" "+to_string(dv.VALUE);}
+	else if (reading==true && !dv.VALID){
 		cout << "Ceci est une ligne de " << LABEL << " : " << DISP << endl;
 		DISP.clear();
 		COUNTER=1;

@@ -18,8 +18,10 @@ class component {
 public:
   string TYPE;
   string LABEL;
-  virtual void simulate();
-  virtual DATA_VALUE read();
+  virtual void simulate() =0;
+  virtual DATA_VALUE read() =0;
+  //component();
+  virtual ~component(){};
 };
 
 class INSTRUCTION {
@@ -45,7 +47,7 @@ public:
   bool isDone();
   void load(string file);
 //  PROGRAMME();
-//  ~PROGRAMME(){};
+  ~PROGRAMME(){};
 };
 
 class CPU_Register {
@@ -56,7 +58,7 @@ public:
   double readValue();
   bool isEmpty();
 //  CPU_Register();
-//  ~CPU_Register(){};
+  ~CPU_Register(){};
 };
 
 class CPU : public component {
@@ -110,18 +112,18 @@ private:
   int ADD_WR;
   std::vector<MEM_POINT> MEM_CONTENT;
   string SOURCE;
+  component* pSOURCE;
   int search_max_rank();
   void rank_downgrade();
   int search_write();
   int search_read();
 public:
   DATA_VALUE read();
-  MEMORY(string file);
-  ~MEMORY(){};
-  double data_in;
-  void print_label();
+  string sourceLabel();
   void print_mem_content();
   void simulate();
+  MEMORY(string file, component* source);
+  ~MEMORY(){};
 };
 
 class DISPLAY : public component {
@@ -131,12 +133,12 @@ private:
   bool reading;
   string SOURCE;
   string DISP;
+  component* pSOURCE;
 public:
   DATA_VALUE read(){return DATA_VALUE(0,true);};
-  DISPLAY(string file,string label);
-  ~DISPLAY(){};
-  DATA_VALUE data_in;
   bool get_state();
-  void print_label();
+  string sourceLabel();
   void simulate();
+  DISPLAY(string file, component* source);
+  ~DISPLAY(){};
 };
