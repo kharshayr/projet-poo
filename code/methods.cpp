@@ -7,7 +7,7 @@
 
 using namespace std;
 
-CPU:: CPU(string file) {
+CPU::CPU(string file) {
 	ifstream inFile(file,ios::out);
 	string x;
 	if (!inFile) {
@@ -77,9 +77,13 @@ BUS::BUS(string file, component* source) {
 	}
 }
 
-
+MEM_POINT::MEM_POINT(){
+	AGE_RANK=0;
+	VALUE=0;
+}
 
 MEMORY::MEMORY(string file) {
+	COUNTER=1;
 	ifstream inFile(file,ios::out);
 	string x;
 	if (!inFile) {
@@ -112,13 +116,17 @@ MEMORY::MEMORY(string file) {
 			}
 		}
 	}
+	for (int i=0;i<SIZE;i++){
+		MEM_CONTENT.emplace_back();
+	}
 }
-
-
 
 DISPLAY::DISPLAY(string file,string label) {
 	ifstream inFile(file,ios::out);
+	DISP="";
+	reading=false;
 	string x;
+	COUNTER=1;
 	if (!inFile) {
 		cerr << "Unable to open file for DISPLAY" << endl;
 	}
@@ -144,7 +152,6 @@ DISPLAY::DISPLAY(string file,string label) {
 	}
 }
 
-
 INSTRUCTION::INSTRUCTION(string line){
 	istringstream iss(line);
 	string x;
@@ -160,21 +167,6 @@ INSTRUCTION::INSTRUCTION(string line){
 		OPERANDE2=stod(x);
 	}
 }
-
-/*PROGRAMME::PROGRAMME(string file){
-	ifstream inFile(file,ios::out);
-	string x;
-	if (!inFile) {
-		cerr << "Unable to open file for LIST_INST" << endl;
-	}
-	else {
-		while (getline(inFile,x)){
-			INSTRUCTION inst(x);
-			LIST_INST.push_back(inst);
-
-		}
-	}
-}*/
 
 void PROGRAMME::load(string file){
 	ifstream inFile(file,ios::out);
@@ -303,4 +295,126 @@ DATA_VALUE BUS::read() {
 		return dv2;
 	}
 	readNumber++;
+}
+
+int MEMORY::search_max_rank(){
+	int max_rank=0;
+	for (int i=0;i<SIZE;i++){
+		if (MEM_CONTENT[i].AGE_RANK>=max_rank){
+			max_rank=MEM_CONTENT[i].AGE_RANK;
+		}
+	}
+	return max_rank;
+}
+
+int MEMORY::search_write(){
+	int min=0;
+	for (int i=0;i<SIZE;i++){
+		if (MEM_CONTENT[i].AGE_RANK==0){
+			return i;
+		}
+		if (MEM_CONTENT[i].AGE_RANK<=MEM_CONTENT[min].AGE_RANK){
+			min=i;
+		}
+	}
+return min;
+}
+
+int MEMORY::search_read(){
+	int min=0;
+	int i=0;
+	while (MEM_CONTENT[min].AGE_RANK==0 && i!=SIZE){ // min initialisation
+		min=i;
+		i++;
+	}
+	for (i=0;i<SIZE;i++){
+		if (MEM_CONTENT[i].AGE_RANK<=MEM_CONTENT[min].AGE_RANK && MEM_CONTENT[i].AGE_RANK!=0){
+			min=i;
+		}
+	}
+	return min;
+}
+
+void MEMORY::rank_downgrade(){
+	for (int i=0;i<SIZE;i++){
+		if (MEM_CONTENT[i].AGE_RANK!=0){
+			MEM_CONTENT[i].AGE_RANK-=1;
+		}
+	}
+}
+
+void MEMORY::simulate(){
+	if (COUNTER!=ACCESS){
+		COUNTER+=1;
+		return;
+	}
+	COUNTER=1;
+	int add=search_write();
+	MEM_CONTENT[add].AGE_RANK=search_max_rank()+1;
+	MEM_CONTENT[add].VALUE=data_in;
+	if (MEM_CONTENT[add].AGE_RANK==SIZE+1){
+		rank_downgrade();
+	}
+}
+
+DATA_VALUE MEMORY::read(){
+	DATA_VALUE value(0,false);
+	int oldest_index=search_read();
+	if (MEM_CONTENT[oldest_index].AGE_RANK!=0){
+		value.VALID=true;
+		value.VALUE=MEM_CONTENT[oldest_index].VALUE;
+		MEM_CONTENT[oldest_index].AGE_RANK=0;
+		rank_downgrade();
+	}
+	return value;
+}
+
+void DATA_VALUE::print_data(){
+	if (VALID){
+		cout << "VALUE: " << VALUE << endl;
+	}
+	else{
+		cout << "INVALID DATA" << endl;
+	}
+}
+
+void MEM_POINT::print_mem_point(){
+	cout << "[value: " << VALUE << ",rank: " << AGE_RANK << "]" << endl;
+}
+
+void MEMORY::print_mem_content(){
+	for (int i=0;i<SIZE;i++){
+		MEM_CONTENT[i].print_mem_point();
+	}
+}
+
+void MEMORY::print_label(){
+	cout << SOURCE << endl;
+}
+
+void DISPLAY::print_label(){
+	cout << SOURCE << endl;
+}
+
+void DISPLAY::simulate(){
+	if (COUNTER!=RR){
+		COUNTER+=1;
+		reading=false;
+		return;
+	}
+	else if (reading==false && COUNTER==RR){
+		reading=true;
+	}
+	else if (reading==true && data_in.VALID){
+		DISP=DISP+" "+to_string(data_in.VALUE);}
+	else if (reading==true && !data_in.VALID){
+		cout << "Ceci est une ligne de " << LABEL << " : " << DISP << endl;
+		DISP.clear();
+		COUNTER=1;
+		reading=false;
+	}
+}
+
+bool DISPLAY::get_state(){
+	return reading;
 }

@@ -16,4 +16,21 @@ int main() {
 	PROGRAMME prg;
 	prg.load("PROG.txt");
 	prg.printProg();
+
+	// Filling up memories
+	for (int i=0;i<300;i++){ //Simulation of 300 cycles
+		mem1.data_in=(i+1)/3;
+		mem1.simulate();
+	}
+	// Waiting for display to be ready to get values from memory
+	DATA_VALUE mem_data=mem1.read();
+	disp1.data_in=mem_data;
+	while (!disp1.get_state()){
+		disp1.simulate();
+	}
+	while (disp1.get_state()){
+		disp1.data_in=mem_data; // Link between components
+		disp1.simulate(); // We store the value
+		mem_data=mem1.read(); // Read in the memory
+	}
 }
