@@ -70,6 +70,7 @@ public:
 class DATA_VALUE {
 private:
   friend class MEMORY;
+  friend class DISPLAY;
   double VALUE;
   bool VALID;
 public:
@@ -104,6 +105,8 @@ private:
 public:
   MEMORY(string file);
   ~MEMORY(){};
+  double data_in;
+  void print_label();
   void print_mem_content();
   void simulate();
   DATA_VALUE read();
@@ -112,8 +115,14 @@ public:
 class DISPLAY : public component {
 private:
   int RR;
+  int COUNTER;
+  bool reading;
   string SOURCE;
+  string DISP;
 public:
   DISPLAY(string,string);
-  ~DISPLAY(){};
+  DATA_VALUE data_in;
+  bool get_state();
+  void print_label();
+  void simulate();
 };

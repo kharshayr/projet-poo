@@ -119,11 +119,12 @@ MEMORY::MEMORY(string file) {
 	}
 }
 
-
-
 DISPLAY::DISPLAY(string file,string label) {
 	ifstream inFile(file,ios::out);
+	DISP="";
+	reading=false;
 	string x;
+	COUNTER=1;
 	if (!inFile) {
 		cerr << "Unable to open file for DISPLAY" << endl;
 	}
@@ -148,7 +149,6 @@ DISPLAY::DISPLAY(string file,string label) {
 		}
 	}
 }
-
 
 INSTRUCTION::INSTRUCTION(string line){
 	istringstream iss(line);
@@ -224,7 +224,7 @@ int MEMORY::search_max_rank(){
 }
 
 int MEMORY::search_write(){
-	int min=SIZE;
+	int min=0;
 	for (int i=0;i<SIZE;i++){
 		if (MEM_CONTENT[i].AGE_RANK==0){
 			return i;
@@ -237,8 +237,13 @@ return min;
 }
 
 int MEMORY::search_read(){
-	int min=SIZE;
-	for (int i=0;i<SIZE;i++){
+	int min=0;
+	int i=0;
+	while (MEM_CONTENT[min].AGE_RANK==0 && i!=SIZE){ // min initialisation
+		min=i;
+		i++;
+	}
+	for (i=0;i<SIZE;i++){
 		if (MEM_CONTENT[i].AGE_RANK<=MEM_CONTENT[min].AGE_RANK && MEM_CONTENT[i].AGE_RANK!=0){
 			min=i;
 		}
@@ -257,17 +262,14 @@ void MEMORY::rank_downgrade(){
 void MEMORY::simulate(){
 	if (COUNTER!=ACCESS){
 		COUNTER+=1;
+		return;
 	}
-	else {
-		COUNTER=1;
-		MEM_POINT temp;
-		int add=search_write();
-		temp.AGE_RANK=search_max_rank()+1;
-		/*temp.VALUE= ???; Comment lier les composants ? */
-		MEM_CONTENT[add]=temp;
-		if (MEM_CONTENT[add].AGE_RANK==SIZE+1){
-			rank_downgrade();
-		}
+	COUNTER=1;
+	int add=search_write();
+	MEM_CONTENT[add].AGE_RANK=search_max_rank()+1;
+	MEM_CONTENT[add].VALUE=data_in;
+	if (MEM_CONTENT[add].AGE_RANK==SIZE+1){
+		rank_downgrade();
 	}
 }
 
@@ -279,10 +281,10 @@ DATA_VALUE::DATA_VALUE(){
 DATA_VALUE MEMORY::read(){
 	DATA_VALUE value;
 	int oldest_index=search_read();
-	if (oldest_index!=SIZE){
+	if (MEM_CONTENT[oldest_index].AGE_RANK!=0){
 		value.VALID=true;
 		value.VALUE=MEM_CONTENT[oldest_index].VALUE;
-		MEM_POINT MEM_CONTENT[oldest_index];
+		MEM_CONTENT[oldest_index].AGE_RANK=0;
 		rank_downgrade();
 	}
 	return value;
@@ -305,4 +307,35 @@ void MEMORY::print_mem_content(){
 	for (int i=0;i<SIZE;i++){
 		MEM_CONTENT[i].print_mem_point();
 	}
+}
+
+void MEMORY::print_label(){
+	cout << SOURCE << endl;
+}
+
+void DISPLAY::print_label(){
+	cout << SOURCE << endl;
+}
+
+void DISPLAY::simulate(){
+	if (COUNTER!=RR){
+		COUNTER+=1;
+		reading=false;
+		return;
+	}
+	else if (reading==false && COUNTER==RR){
+		reading=true;
+	}
+	else if (reading==true && data_in.VALID){
+		DISP=DISP+" "+to_string(data_in.VALUE);}
+	else if (reading==true && !data_in.VALID){
+		cout << "Ceci est une ligne de " << LABEL << " : " << DISP << endl;
+		DISP.clear();
+		COUNTER=1;
+		reading=false;
+	}
+}
+
+bool DISPLAY::get_state(){
+	return reading;
 }
