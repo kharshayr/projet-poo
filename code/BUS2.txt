@@ -1,0 +1,4 @@
+TYPE: BUS
+LABEL: My_bus_2
+WIDTH: 2
+SOURCE: DRAM_1

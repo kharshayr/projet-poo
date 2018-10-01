@@ -65,3 +65,7 @@ DATA_VALUE BUS::read() {
 	}
 	readNumber++;
 }
+
+string BUS::get_source(){
+	return SOURCE;
+}

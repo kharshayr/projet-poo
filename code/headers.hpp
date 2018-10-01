@@ -4,6 +4,7 @@
 #include <queue>
 #include <vector>
 #include <sstream>
+#include <map>
 
 using namespace std;
 
@@ -14,7 +15,6 @@ public:
   DATA_VALUE(double value, bool valid);
   ~DATA_VALUE(){};
   void print_data();
-
 };
 
 class component {
@@ -25,6 +25,16 @@ public:
   virtual DATA_VALUE read() =0;
   //component();
   virtual ~component(){};
+};
+
+class PLATFORM{
+public:
+  int platform;
+  std::map<string,component*> component_map;
+  PLATFORM();
+  ~PLATFORM(){};
+  void load(string);
+  void simulate(string);
 };
 
 class INSTRUCTION {
@@ -88,6 +98,7 @@ private:
   queue<DATA_VALUE> ready;
   int readNumber;
 public:
+  string get_source();
   string sourceLabel();
   void readyValues();
   void simulate();
@@ -109,6 +120,7 @@ public:
 
 class MEMORY : public component {
 private:
+  friend component;
   int SIZE;
   int ACCESS;
   int COUNTER;
@@ -121,6 +133,7 @@ private:
   int search_write();
   int search_read();
 public:
+  string get_source();
   DATA_VALUE read();
   string sourceLabel();
   void print_mem_content();
@@ -142,6 +155,7 @@ public:
   bool get_state();
   string sourceLabel();
   void simulate();
+  string get_source();
   DISPLAY(string file, component* source);
   ~DISPLAY(){};
 };

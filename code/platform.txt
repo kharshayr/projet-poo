@@ -1,0 +1,5 @@
+CPU1.txt
+BUS1.txt
+MEMORY1.txt
+BUS2.txt
+DISPLAY1.txt

@@ -3,6 +3,7 @@
 CPU::CPU(string file) {
 	ifstream inFile(file,ios::out);
 	string x;
+	ACTIVE_CORE=0;
 	if (!inFile) {
 		cerr << "Unable to open file for CPU" << endl;
 		return;

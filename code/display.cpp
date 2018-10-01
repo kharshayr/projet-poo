@@ -62,3 +62,7 @@ void DISPLAY::simulate(){
 bool DISPLAY::get_state(){
 	return reading;
 }
+
+string DISPLAY::get_source(){
+	return SOURCE;
+}

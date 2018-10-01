@@ -125,3 +125,7 @@ void MEMORY::print_mem_content(){
 string MEMORY::sourceLabel() {
 	return (*pSOURCE).LABEL;
 }
+
+string MEMORY::get_source(){
+	return SOURCE;
+}
