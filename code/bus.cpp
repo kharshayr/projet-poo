@@ -34,6 +34,7 @@ BUS::BUS(string file, component* source) {
 }
 
 void BUS::printBus(){
+	cout << "-----------------------------------------------------------" << endl;
 	cout << "BUS Label : " << LABEL << endl;
 	cout << "Nmber of accesses : " << readNumber << endl;
 }

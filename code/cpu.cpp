@@ -59,7 +59,7 @@ void CPU::simulate() {
 		while(!prg.isDone()) {
 			INSTRUCTION inst = prg.compute();
 			inst.printInst();
-			cout << "Result : " << inst.computeInst();
+			cout << "Result : " << inst.computeInst() << endl;
 			for(int i = 0; i<FREQUENCY; i++) {
 				REG.appendValue(inst.computeInst());
 			}
@@ -71,6 +71,7 @@ void CPU::simulate() {
 }
 
 void CPU::printCPU() {
+ cout << "-----------------------------------------------------------" << endl;
  cout << "CPU Label : " << LABEL << endl;
  cout << "Total number of cores : " << CORES << endl;
  cout << "Active core : " << (ACTIVE_CORE + 1) << endl;

@@ -34,7 +34,9 @@ public:
   PLATFORM();
   ~PLATFORM(){};
   void load(string);
-  void simulate(string);
+  void simulate();
+private:
+  std::vector<string> list_labels;
 };
 
 class INSTRUCTION {
@@ -59,7 +61,7 @@ public:
   void reset();
   bool isDone();
   void load(string file);
-//  PROGRAMME();
+  PROGRAMME();
   ~PROGRAMME(){};
 };
 
