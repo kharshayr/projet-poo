@@ -54,9 +54,12 @@ bool CPU_Register::isEmpty() {
 
 void CPU::simulate() {
 	prg.load("PROG.txt");
+	printCPU();
 	while(ACTIVE_CORE!=CORES) {
 		while(!prg.isDone()) {
 			INSTRUCTION inst = prg.compute();
+			inst.printInst();
+			cout << "Result : " << inst.computeInst();
 			for(int i = 0; i<FREQUENCY; i++) {
 				REG.appendValue(inst.computeInst());
 			}
@@ -65,6 +68,13 @@ void CPU::simulate() {
 		ACTIVE_CORE++;
 	}
 	ACTIVE_CORE = 0;
+}
+
+void CPU::printCPU() {
+ cout << "CPU Label : " << LABEL << endl;
+ cout << "Total number of cores : " << CORES << endl;
+ cout << "Active core : " << (ACTIVE_CORE + 1) << endl;
+ cout << "Frequency : " << FREQUENCY << endl;
 }
 
 DATA_VALUE CPU::read() {

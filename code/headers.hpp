@@ -84,6 +84,7 @@ private:
   CPU_Register REG;
 public:
   void simulate();
+  void printCPU();
   DATA_VALUE read();
   CPU(string);
   ~CPU(){};
@@ -101,6 +102,7 @@ public:
   string get_source();
   string sourceLabel();
   void readyValues();
+  void printBus();
   void simulate();
   DATA_VALUE read();
   BUS(string,component*);

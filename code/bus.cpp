@@ -33,6 +33,11 @@ BUS::BUS(string file, component* source) {
 	}
 }
 
+void BUS::printBus(){
+	cout << "BUS Label : " << LABEL << endl;
+	cout << "Nmber of accesses : " << readNumber << endl;
+}
+
 void BUS::simulate(){
 	readyValues();
 	for(int i = 0; i < WIDTH; i++){
@@ -40,6 +45,7 @@ void BUS::simulate(){
 		if(dv.VALID == false) return;
 		else pending.push(dv);
 	}
+	printBus();
 }
 
 string BUS::sourceLabel() {
