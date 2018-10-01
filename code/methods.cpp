@@ -118,21 +118,25 @@ void PLATFORM::load(string file){
 			if (x=="CPU"){
 				CPU* cpu=new CPU(comp_path);
 				component_map[cpu->LABEL]=cpu;
+				list_labels.push_back(cpu->LABEL);
 			}
 			else if (x=="MEMORY"){
 				MEMORY* mem_temp=new MEMORY(comp_path,temp);
 				MEMORY* mem=new MEMORY(comp_path,component_map[mem_temp->get_source()]);
 				component_map[mem->LABEL]=mem;
+				list_labels.push_back(mem->LABEL);
 			}
 			else if (x=="DISPLAY"){
 				DISPLAY* display_temp=new DISPLAY(comp_path,temp);
 				DISPLAY* display=new DISPLAY(comp_path,component_map[display_temp->get_source()]);
 				component_map[display->LABEL]=display;
+				list_labels.push_back(display->LABEL);
 			}
 			else if (x=="BUS"){
 				BUS* bus_temp=new BUS(comp_path,temp);
 				BUS* bus=new BUS(comp_path,component_map[bus_temp->get_source()]);
 				component_map[bus->LABEL]=bus;
+				list_labels.push_back(bus->LABEL);
 			}
 			else {
 				cout << "Component type not valid for " << x << endl;
@@ -145,48 +149,10 @@ void PLATFORM::load(string file){
 	}
 }
 
-void PLATFORM::simulate(string file){
-	ifstream inFile(file,ios::out);
-	string comp_path;
-	string x;
-	std::vector<string> paths;
-	if (!inFile) {
-		cerr << "Unable to open file " << file << endl;
-		return;
-	}
-	while (inFile >> x){
-		paths.push_back(x);
-	}
-	while (!paths.empty()){
-		comp_path=paths.front();
-		ifstream inFile(comp_path,ios::out);
-		inFile >> x;
-		component* temp=NULL;
-		if (x=="TYPE:"){
-			inFile >> x;
-			if (x=="CPU"){
-				CPU cpu(comp_path);
-				(*component_map[cpu.LABEL]).simulate();
-			}
-			else if (x=="MEMORY"){
-				MEMORY mem(comp_path,temp);
-				(*component_map[mem.LABEL]).simulate();
-			}
-			else if (x=="DISPLAY"){
-				DISPLAY display(comp_path,temp);
-				(*component_map[display.LABEL]).simulate();
-			}
-			else if (x=="BUS"){
-				BUS bus(comp_path,temp);
-				(*component_map[bus.LABEL]).simulate();
-			}
-			else {
-				cout << "Component type not valid for " << x << endl;
-			}
-		}
-		else{
-			cout << "File path invalid for " << comp_path << endl;
-		}
-		paths.erase(paths.begin());
+void PLATFORM::simulate(){
+	std::vector<string> labels=list_labels;
+	while (!labels.empty()){
+		component_map[labels.front()]->simulate();
+		labels.erase(labels.begin());
 	}
 }

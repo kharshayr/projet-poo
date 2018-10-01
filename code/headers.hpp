@@ -34,7 +34,9 @@ public:
   PLATFORM();
   ~PLATFORM(){};
   void load(string);
-  void simulate(string);
+  void simulate();
+private:
+  std::vector<string> list_labels;
 };
 
 class INSTRUCTION {
