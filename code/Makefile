@@ -4,7 +4,7 @@ CPPFLAGS=-g -c -std=c++11 -Wall -Werror
 
 all: main.exe
 
-main.exe: main.o methods.o
+main.exe: main.o methods.o memory.o bus.o display.o cpu.o
 	$(CC) $^ -o $@
 
 %.o: %.cpp

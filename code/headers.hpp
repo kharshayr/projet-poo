@@ -1,6 +1,9 @@
 #include <list>
 #include <iostream>
 #include <fstream>
+#include <queue>
+#include <vector>
+#include <sstream>
 
 using namespace std;
 
