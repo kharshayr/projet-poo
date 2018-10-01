@@ -116,23 +116,23 @@ void PLATFORM::load(string file){
 		if (x=="TYPE:"){
 			inFile >> x;
 			if (x=="CPU"){
-				CPU cpu(comp_path);
-				component_map[cpu.LABEL]=&cpu;
+				CPU* cpu=new CPU(comp_path);
+				component_map[cpu->LABEL]=cpu;
 			}
 			else if (x=="MEMORY"){
-				MEMORY mem_temp(comp_path,temp);
-				MEMORY mem(comp_path,component_map[mem_temp.get_source()]);
-				component_map[mem.LABEL]=&mem;
+				MEMORY* mem_temp=new MEMORY(comp_path,temp);
+				MEMORY* mem=new MEMORY(comp_path,component_map[mem_temp->get_source()]);
+				component_map[mem->LABEL]=mem;
 			}
 			else if (x=="DISPLAY"){
-				DISPLAY display_temp(comp_path,temp);
-				DISPLAY display(comp_path,component_map[display_temp.get_source()]);
-				component_map[display.LABEL]=&display;
+				DISPLAY* display_temp=new DISPLAY(comp_path,temp);
+				DISPLAY* display=new DISPLAY(comp_path,component_map[display_temp->get_source()]);
+				component_map[display->LABEL]=display;
 			}
 			else if (x=="BUS"){
-				BUS bus_temp(comp_path,temp);
-				BUS bus(comp_path,component_map[bus_temp.get_source()]);
-				component_map[bus.LABEL]=&bus;
+				BUS* bus_temp=new BUS(comp_path,temp);
+				BUS* bus=new BUS(comp_path,component_map[bus_temp->get_source()]);
+				component_map[bus->LABEL]=bus;
 			}
 			else {
 				cout << "Component type not valid for " << x << endl;
